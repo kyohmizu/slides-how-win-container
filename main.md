@@ -28,52 +28,49 @@ class: center, middle, inverse
 ]
 
 ---
-### はじめに
-
-.zoom2[
-- Windowsコンテナについて、調べた内容を共有します
-
-.tmp[
-- 基本的にMSドキュメントを参考  
-  .zoom2[<u><https://docs.microsoft.com/en-us/virtualization/windowscontainers/></u>]
-]
-
-- 間違っている点があればご指摘ください
-]
-
----
 ### 今日話すこと
 
 .zoom2[
-- Windowsコンテナ概要
-
-- コンテナ本体のしくみ
-
-- ネットワークのしくみ
+.tmp[
+- Windowsコンテナの主要インターフェイスについて
+  - HCS
+  - HNS
+]
+.tmp[
+- 実行したコンテナを各種ツールで確認してみる
+]
 ]
 
 ---
 class: header-margin
-### Windows on Kubernetes
+### より詳しく知りたい方は…
 
-.half-3[
-<center><img src="https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/media/windowsnetworkstack-simple.png" width=92%></center>
-]
-
-.zoom0-r[
-<u>https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture</u>
-]
+<center><img src="qiita.png" width=100%></center>
 
 ---
-class: header-margin
-### Windows on Kubernetes
+### Windowsコンテナの特徴
 
-.half-3[
-<center><img src="https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/media/hns-management-stack.png" width=70%></center>
+.zoom1[
+.tmp[
+- 2つの分離モード
+  - プロセス分離、Hyper-V分離
+  - `--isolation` オプションで指定
 ]
 
-.zoom0-r[
-<u>https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture</u>
+.tmp[
+- 4つのベースイメージ  
+  .zoom1[<u><https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-base-images></u>]
+]
+
+.tmp[
+- コンテナはホストOSのバージョンに依存
+  - プロセス分離の場合、同一バージョンのイメージのみ実行可能
+]
+
+.tmp[
+- ドキュメントがない、足りない
+  - プロプラつらい
+]
 ]
 
 ---
@@ -97,24 +94,92 @@ class: header-margin
 ]
 
 ---
+### インターフェイス
+
+.zoom1[
+.tmp[
+- HCS (Host Compute Service)
+  - コンテナ管理のための低レベル機能をAPIとして提供
+  - cgroups、namespace 等の役割
+  - 実体は `vmcompute.dll`
+  - Docker ではGo Wrapperの `hcsshim` を使用
+]
+
+.tmp[
+- HNS (Host Networking Service)
+  - 仮想スイッチやエンドポイント、ポリシーの作成等を行う
+  - 5つのネットワークドライバをサポート  
+    (nat, overlay, transparent, l2bridge, l2tunnel)
+  - `hcsshim` に含まれる
+  - 今は HCN (Host Compute Networking) と呼ばれる？
+]
+]
+
+---
+### コンテナランタイム
+
+.zoom1[
+<u><https://github.com/microsoft/hcsshim/tree/master/cmd/runhcs></u>
+
+- runhsc
+  - OCI準拠のコンテナランタイム
+  - `runc` をforkしたもの
+  - Windowsコンテナのプロセス分離とHyper-V分離、LCOWに対応
+  - containerd (on Windows) + runhcs の構成
+
+```cmd
+runhcs run [ -b bundle ] <container-id>
+```
+
+- Docker では `hcsshim` で直接HCS、HNSを呼び出している
+]
+
+---
+class: header-margin
+### Linuxコンテナとの比較
+
+.half-3[
+<center><img src="diff.png" width=74%></center>
+]
+
+.zoom0-r[
+<u>https://www.slideshare.net/Docker/windows-container-security</u>
+]
+
+---
+### 実行環境
+
+---
+class: header-margin
+### コンテナネットワーク
+
+.half-3[
+<center><img src="https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/media/windowsnetworkstack-simple.png" width=92%></center>
+]
+
+.zoom0-r[
+<u>https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture</u>
+]
+
+---
 ### 参考
 
 .zoom1[
 .zoom01[
-Intro to Windows support in Kubernetes  
-<u><https://kubernetes.io/docs/setup/production-environment/windows/intro-windows-in-kubernetes/></u>
+Docker Desktop の復習と、Windows Container に入門: Windows Server Container 理論編  
+<u><https://qiita.com/kikuchi_kentaro/items/2fb0171e18821d402761></u>
 
-Kubernetes on Windows  
-<u><https://docs.microsoft.com/en-us/virtualization/windowscontainers/kubernetes/getting-started-kubernetes-windows></u>
+Introducing the Host Compute Service (HCS)  
+<u><https://techcommunity.microsoft.com/t5/containers/introducing-the-host-compute-service-hcs/ba-p/382332></u>
 
-Windows container networking  
-<u><https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture></u>
+Containers on Windows Documentation  
+<u><https://docs.microsoft.com/en-us/virtualization/windowscontainers/></u>
 
-KubernetesとFlannelでWindows上にPod間VXLAN Overlayネットワークを構成  
-<u><https://www.slideshare.net/anikundesu/kubernetesflannelwindowspodvxlan-overlay-152588125></u>
+Windows container security  
+<u><https://www.slideshare.net/Docker/windows-container-security></u>
 
-Kubernetes Networking: Behind the scenes  
-<u><https://itnext.io/kubernetes-networking-behind-the-scenes-39a1ab1792bb></u>
+Deep dive into Windows Server Containers and Docker – Part 2  
+<u><https://xebia.com/blog/deep-dive-into-windows-server-containers-and-docker-part-2-underlying-implementation-of-windows-server-containers/></u>
 ]
 ]
 
