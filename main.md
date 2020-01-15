@@ -68,8 +68,39 @@ class: header-margin
 ]
 
 .tmp[
-- ドキュメントがない、足りない
+- ドキュメントがない、少ない
   - プロプラつらい
+]
+]
+
+---
+### Get Started
+
+.zoom01[
+.tmp[
+- Dockerをインストール
+
+```powershell
+PS> Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+PS> Install-Package -Name docker -ProviderName DockerMsftProvider
+PS> Restart-Computer -Force
+```
+
+- 再起動後、docker コマンドが有効に
+- HNS (後述)の管理モジュールもインストールされる
+
+```powershell
+PS> docker version
+PS> Get-HnsNetwork
+```
+]
+
+.tmp[
+- Hyper-Vを有効化
+
+```powershell
+PS> Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+```
 ]
 ]
 
@@ -147,11 +178,24 @@ class: header-margin
 ]
 
 ---
-### 実行環境
+### Kernel Isolation in Windows
+
+.zoom1[
+- Silos
+
+- Job Objects
+
+- Syscall Filtering
+
+- Sandoxing
+]
+
+---
+### ファイルシステム
 
 ---
 class: header-margin
-### コンテナネットワーク
+### ネットワーク
 
 .half-3[
 <center><img src="https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/media/windowsnetworkstack-simple.png" width=92%></center>
@@ -160,6 +204,38 @@ class: header-margin
 .zoom0-r[
 <u>https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture</u>
 ]
+
+---
+class: center, middle, blue
+## 動作確認
+
+---
+### 環境
+
+.zoom1[
+.tmp[
+- Azure VM
+  - Windows Server 1809
+]
+
+.tmp[
+- Windowsコンテナ
+  - プロセス分離
+  - nat ネットワーク
+]
+]
+
+---
+### ストレージ
+
+---
+### ファイルシステム
+
+---
+### レジストリ
+
+---
+### ネットワーク
 
 ---
 ### 参考
