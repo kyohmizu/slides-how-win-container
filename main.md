@@ -36,12 +36,12 @@ class: center, middle, inverse
 ]
 
 .tmp[
-- Windowsコンテナの主要インターフェイスについて
+- Windowsコンテナのアーキテクチャ
   - HCS
   - HNS
 ]
 .tmp[
-- 実行したコンテナを各種ツールで確認
+- コンテナを実行して色々確認
 ]
 ]
 
@@ -73,7 +73,6 @@ class: header-margin
 
 .tmp[
 - ドキュメントがない、少ない
-  - プロプラつらい
 ]
 ]
 
@@ -224,7 +223,7 @@ class: header-margin
 
 .tmp[
 - WindowsアプリはNTFSセマンティクスを想定
-  - トランザクション、USN Journal
+  - トランザクション、USN Journal等
   - 完全なunionFSを作成するのが困難
 ]
 
