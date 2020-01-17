@@ -116,7 +116,7 @@ class: header-margin
 ]
 
 .zoom0-r[
-<u>https://qiita.com/kikuchi_kentaro/items/2fb0171e18821d402761</u>
+引用：<u>https://qiita.com/kikuchi_kentaro/items/2fb0171e18821d402761</u>
 ]
 
 ---
@@ -128,7 +128,7 @@ class: header-margin
 ]
 
 .zoom0-r[
-<u>https://qiita.com/kikuchi_kentaro/items/2fb0171e18821d402761#hcs--host-compute-service-</u>
+引用：<u>https://qiita.com/kikuchi_kentaro/items/2fb0171e18821d402761#hcs--host-compute-service-</u>
 ]
 
 ---
@@ -159,7 +159,7 @@ class: header-margin
 .zoom1[
 <u><https://github.com/microsoft/hcsshim/tree/master/cmd/runhcs></u>
 
-- runhsc
+- runhcs
   - OCI準拠のコンテナランタイム
   - `runc` をforkしたもの
   - Windowsコンテナのプロセス分離とHyper-V分離、LCOWに対応
@@ -177,11 +177,11 @@ class: header-margin
 ### Linuxコンテナとの機能比較
 
 .half-3[
-<center><img src="diff.png" width=74%></center>
+<center><img src="diff.png" width=73%></center>
 ]
 
 .zoom0-r[
-<u>https://www.slideshare.net/Docker/windows-container-security</u>
+引用：<u>https://www.slideshare.net/Docker/windows-container-security</u>
 ]
 
 ---
@@ -243,16 +243,16 @@ class: header-margin
 ### ネットワーク
 
 .half-3[
-.zoom1[
+.zoom01[
 - コンテナに仮想NICを割り当て
 - Hyper-V virtual switch (vSwitch)経由で接続
 
-<center><img src="https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/media/windowsnetworkstack-simple.png" width=67%></center>
+<center><img src="https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/media/windowsnetworkstack-simple.png" width=70%></center>
 ]
 ]
 
 .zoom0-r[
-<u>https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture</u>
+引用：<u>https://docs.microsoft.com/en-us/virtualization/windowscontainers/container-networking/architecture</u>
 ]
 
 ---
@@ -388,7 +388,7 @@ DISKPART> assign letter=x
 <center><img src="x.png" width=90%></center>
 
 ---
-### ネットワーク
+### ネットワーク設定 (nat)
 
 .zoom01[
 .zoom0[
@@ -432,13 +432,13 @@ PS> docker network inspect 5bdb5d65193e
 ]
 
 ---
-### ネットワーク
+### ネットワーク設定 (nat)
 
 .zoom01[
-- 実体はDockerインストール時に作成された仮想NIC
-
 .zoom1[
 ```powershell
+# 実体はDockerインストール時に作成された仮想NIC
+
 PS> Get-NetAdapter -Name "vEthernet (nat)" `
 | fl Name,MacAddress,DeviceID,DeviceName,InterfaceIndex,InterfaceName,InterfaceType,Virtual
 #Name           : vEthernet (nat)
@@ -468,11 +468,13 @@ PS> Get-NetIPAddress | ? {$_.InterfaceIndex -eq 8} `
 ]
 
 ---
-### ネットワーク
+### ネットワーク設定 (nat)
 
 .zoom01[
 .zoom1[
 ```powershell
+# 以下のコマンドでも確認可能
+
 PS> ipconfig /all
 #Ethernet adapter vEthernet (nat):
 #
@@ -502,7 +504,7 @@ PS> netsh int ipv4 show int
 ]
 
 ---
-### ネットワーク
+### ネットワーク設定 (コンテナ)
 
 .zoom01[
 .zoom0[
@@ -549,11 +551,13 @@ PS> docker container inspect 56dae625d7c0
 ]
 
 ---
-### ネットワーク
+### ネットワーク設定 (コンテナ)
 
 .zoom01[
 .zoom1[
 ```powershell
+# コンテナに割り当てられる仮想NICの確認
+
 # コンテナ内
 (CONTAINER) PS> Get-NetAdapter `
 | fl -Property Name,MacAddress,DeviceID,DeviceName,InterfaceIndex,InterfaceName,InterfaceType,Virtual
@@ -582,11 +586,13 @@ PS> Get-NetAdapter -Name "vEthernet (Ethernet) 5" `
 ]
 
 ---
-### ネットワーク
+### ネットワーク設定 (コンテナ)
 
 .zoom01[
 .zoom1[
 ```powershell
+# コンテナのIPアドレス
+
 # コンテナ内
 (CONTAINER) PS> Get-NetIPAddress | ? {$_.InterfaceIndex -eq 17} `
 | fl -Property IPAddress,InterfaceIndex,InterfaceAlias,AddressFamily
@@ -609,21 +615,23 @@ InterfaceIndex,@{Expression={$_.IPv4Address}},@{Expression={$_.IPv4DefaultGatewa
 # ホスト側
 PS> Get-NetIPAddress | ? {$_.InterfaceIndex -eq 17} `
 | fl -Property IPAddress,InterfaceIndex,InterfaceAlias,AddressFamily
-# 取得結果なし
+# ホストからは確認できない
 ```
 ]
 ]
 
 ---
-### ネットワーク
+### ネットワーク設定 (コンテナ)
 
 .zoom1[
 .zoom0[
 ```powershell
+# HNS Networkでコンテナ数を確認できる
+
 PS> Get-HnsNetwork
 #ActivityId             : 47E672B6-69C8-4A35-AB2C-02E8B88F2C76
 #AdditionalParams       :
-#CurrentEndpointCount   : 1
+#CurrentEndpointCount   : 1    ← ネットワーク内のコンテナ数
 #Extensions             : {@{Id=E7C3B2F0-F3C5-48DF-AF2B-10FED6D72E7A; IsEnabled=False; Name=Microsoft Windows Filtering
 #                         Platform}, @{Id=E9B59CFA-2BE1-4B21-828F-B6FBDBDDC017; IsEnabled=False; Name=Microsoft Azure
 #                         VFP Switch Extension}, @{Id=EA24CD6C-D17A-4348-9190-09F0D5BE83DD; IsEnabled=True;
