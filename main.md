@@ -1,4 +1,6 @@
-class: center, middle, inverse
+background-image: url(https://raw.githubusercontent.com/kyohmizu/items-for-presentation/master/bg-06.jpg)
+background-size: cover
+class: center, middle, white 
 ## Windowsコンテナのしくみ
 
 ---
@@ -256,7 +258,9 @@ class: header-margin
 ]
 
 ---
-class: center, middle, blue
+background-image: url(https://raw.githubusercontent.com/kyohmizu/items-for-presentation/master/bg-06.jpg)
+background-size: cover
+class: center, middle, white 
 ## 動作確認
 
 ---
@@ -663,8 +667,8 @@ PS> Get-HnsNetwork
 ]
 
 ---
-class: center, middle, blue
-## 今回はここまで…
+class: center, middle, black
+#### 今回はここまで…
 
 ---
 class: header-margin
@@ -698,5 +702,7 @@ Bringing Docker To Windows Developers with Windows Server Containers
 ]
 
 ---
-class: center, middle, blue
+background-image: url(https://raw.githubusercontent.com/kyohmizu/items-for-presentation/master/bg-06.jpg)
+background-size: cover
+class: center, middle, white 
 ## Thank you!
